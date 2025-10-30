@@ -128,6 +128,41 @@
                       </div>
                     </div>
 
+                    <div class="row row-3">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="loanAmount">Valor do empréstimo desejado</label>
+                        </div>
+                        <input id="loanAmount" name="loanAmount" type="text" inputmode="decimal" placeholder="R$ 0,00" data-label="Valor do empréstimo" />
+                        <div class="help">Quanto o cliente deseja solicitar de empréstimo</div>
+                      </div>
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="pixKey">Chave PIX</label>
+                        </div>
+                        <input id="pixKey" name="pixKey" type="text" placeholder="CPF, email, celular ou chave aleatória" data-label="Chave PIX" />
+                        <div class="help">Chave PIX do cliente para receber o empréstimo</div>
+                      </div>
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="bank">Banco</label>
+                        </div>
+                        <select id="bank" name="bank" data-label="Banco">
+                          <option value="">Selecione o banco</option>
+                          <option value="nubank">Nubank</option>
+                          <option value="inter">Inter</option>
+                          <option value="c6">C6 Bank</option>
+                          <option value="bradesco">Bradesco</option>
+                          <option value="itau">Itaú</option>
+                          <option value="santander">Santander</option>
+                          <option value="caixa">Caixa Econômica</option>
+                          <option value="bb">Banco do Brasil</option>
+                          <option value="outro">Outro</option>
+                        </select>
+                        <div class="help">Banco onde o cliente recebe salário/benefícios</div>
+                      </div>
+                    </div>
+
                     <div class="row">
                       <div class="field">
                         <div class="label-row">
@@ -138,49 +173,20 @@
                       </div>
                     </div>
 
-                    <div class="address-fields row row-2" id="address-fields-cliente">
+                    <div class="row" id="full-address-cliente" style="display: none;">
                       <div class="field">
                         <div class="label-row">
-                          <label for="street">Rua do cliente</label>
+                          <label for="fullAddress">Endereço completo</label>
                         </div>
-                        <input id="street" name="street" type="text" placeholder="Ex.: Rua das Flores" data-label="Rua do cliente" readonly />
-                        <div class="help">Preenchido automaticamente</div>
-                      </div>
-                      <div class="field">
-                        <div class="label-row">
-                          <label for="number">Nº da casa (onde mora o cliente)</label>
-                        </div>
-                        <input id="number" name="number" type="text" placeholder="Ex.: 123" data-label="Nº da casa (onde mora o cliente)" />
-                        <div class="help">Número da residência (ex.: 123). Não é telefone.</div>
+                        <textarea id="fullAddress" name="fullAddress" rows="3" readonly style="resize: none; background: var(--input); border: 2px solid var(--input-border); border-radius: 12px; padding: 16px; font-family: inherit; font-size: 16px; color: var(--text);"></textarea>
                       </div>
                     </div>
 
-                    <div class="address-fields row row-2" id="address-fields-cliente-2">
-                      <div class="field">
-                        <div class="label-row">
-                          <label for="district">Bairro do cliente</label>
-                        </div>
-                        <input id="district" name="district" type="text" placeholder="Ex.: Centro" data-label="Bairro do cliente" readonly />
-                        <div class="help">Preenchido automaticamente</div>
-                      </div>
-                      <div class="field">
-                        <div class="label-row">
-                          <label for="city">Cidade do cliente</label>
-                        </div>
-                        <input id="city" name="city" type="text" placeholder="Ex.: São Paulo" data-label="Cidade do cliente" readonly />
-                        <div class="help">Preenchido automaticamente</div>
-                      </div>
-                    </div>
-
-                    <div class="address-fields row" id="address-fields-cliente-3">
-                      <div class="field">
-                        <div class="label-row">
-                          <label for="complement">Complemento do cliente</label>
-                        </div>
-                        <input id="complement" name="complement" type="text" placeholder="Apto, bloco, referência" data-label="Complemento do cliente" />
-                        <div class="help">Se precisar: Apto 12, Bloco B, perto da escola</div>
-                      </div>
-                    </div>
+                    <input id="street" name="street" type="hidden" />
+                    <input id="number" name="number" type="hidden" />
+                    <input id="district" name="district" type="hidden" />
+                    <input id="city" name="city" type="hidden" />
+                    <input id="complement" name="complement" type="hidden" />
 
                     <div class="row">
                       <div class="field">
@@ -637,26 +643,17 @@
                       <div class="files-preview" id="preview-redesSociais"></div>
                     </div>
 
-                    <div class="actions">
-                      <button type="submit" class="btn-primary">Próximo</button>
-                    </div>
-                  </form>
-                </div>
+                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid var(--input-border);">
+                      <h2 style="font-size: 22px; margin-bottom: 8px;">Confirmações de Endereço</h2>
+                      <p class="help" style="margin-bottom: 20px;">Adicione os dados dos parentes agora. Você pode salvar e completar com foto/GPS depois quando chegar na casa deles.</p>
 
-                <div id="section4" class="section">
-                  <h1>Confirmação de Endereço</h1>
-                  <p class="sub">Adicione as confirmações de endereço dos parentes</p>
-                  <form id="form4">
-                    <div class="field">
-                      <div class="help" style="margin-bottom: 20px;">Clique no botão abaixo para adicionar confirmações de endereço com foto e GPS</div>
-
-                      <button type="button" id="btn-add-confirmation" class="btn-add-confirmation">[+] Adicionar Confirmação de Endereço</button>
+                      <button type="button" id="btn-add-confirmation" class="btn-add-confirmation">[+] Adicionar Confirmação de Parente</button>
 
                       <div id="confirmations-container" class="confirmations-container"></div>
                     </div>
 
                     <div class="actions">
-                      <button type="submit" class="btn-primary">Finalizar</button>
+                      <button type="submit" class="btn-primary">Finalizar Visita</button>
                     </div>
                   </form>
                 </div>
@@ -708,27 +705,41 @@
         <p style="color: var(--muted); margin-bottom: 12px;">Confirme se os dados estão corretos:</p>
         <p id="cep-modal-address"></p>
         <div class="cep-modal-actions">
-          <button type="button" class="cep-modal-btn confirm" id="cep-confirm">✓ Confirmar e Preencher</button>
+          <button type="button" class="cep-modal-btn confirm" id="cep-confirm">✓ Confirmar</button>
           <button type="button" class="cep-modal-btn cancel" id="cep-cancel">✗ Cancelar</button>
         </div>
       </div>
     </div>
 
-    <div id="permission-modal" class="overlay-modal" aria-hidden="true">
-      <div class="overlay-modal__content">
-        <h2>Permissões necessárias</h2>
-        <p>Este aplicativo precisa de acesso à localização e à câmera/arquivos para registrar a visita completa.</p>
-        <ul>
-          <li><strong>Localização:</strong> utilizada para comprovar o endereço visitado.</li>
-          <li><strong>Câmera/Arquivos:</strong> necessária para anexar fotos e documentos.</li>
-        </ul>
-        <p>Clique em "Permitir agora" para abrir a solicitação do navegador.</p>
-        <div class="modal-actions">
-          <button type="button" class="btn-modal btn-fill" id="permission-allow">Permitir agora</button>
-          <button type="button" class="btn-modal btn-skip" id="permission-close">Entendi</button>
+    <div id="cep-number-modal" class="cep-modal">
+      <div class="cep-modal-content">
+        <h3>📍 Complete o endereço</h3>
+        <div class="field" style="margin-bottom: 16px;">
+          <label for="cep-number-input">Número da casa *</label>
+          <input id="cep-number-input" type="text" placeholder="Ex.: 123" style="margin-top: 8px;" />
+        </div>
+        <div class="field" style="margin-bottom: 16px;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="cep-has-complement" style="width: auto; min-height: auto;" />
+            <span>Tem complemento?</span>
+          </label>
+        </div>
+        <div class="field" id="cep-complement-field" style="margin-bottom: 16px; display: none;">
+          <label for="cep-complement-input">Complemento</label>
+          <input id="cep-complement-input" type="text" placeholder="Ex.: Apto 45, Bloco B" style="margin-top: 8px;" />
+        </div>
+        <div class="cep-modal-actions">
+          <button type="button" class="cep-modal-btn confirm" id="cep-number-ok">OK</button>
         </div>
       </div>
     </div>
+
+    <button id="permission-float" class="permission-float" style="display: none;" title="Permitir localização">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+    </button>
 
     <template id="confirmation-template">
       <div class="confirmation-item">

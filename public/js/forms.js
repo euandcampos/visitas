@@ -29,6 +29,12 @@ let cepModal = null;
 let cepModalAddress = null;
 let cepConfirmBtn = null;
 let cepCancelBtn = null;
+let cepNumberModal = null;
+let cepNumberInput = null;
+let cepComplementInput = null;
+let cepHasComplementCheckbox = null;
+let cepComplementField = null;
+let cepNumberOkBtn = null;
 let permissionModal = null;
 
 let emptyFields = [];
@@ -65,6 +71,12 @@ function cacheDom() {
   cepModalAddress = document.getElementById('cep-modal-address');
   cepConfirmBtn = document.getElementById('cep-confirm');
   cepCancelBtn = document.getElementById('cep-cancel');
+  cepNumberModal = document.getElementById('cep-number-modal');
+  cepNumberInput = document.getElementById('cep-number-input');
+  cepComplementInput = document.getElementById('cep-complement-input');
+  cepHasComplementCheckbox = document.getElementById('cep-has-complement');
+  cepComplementField = document.getElementById('cep-complement-field');
+  cepNumberOkBtn = document.getElementById('cep-number-ok');
   permissionModal = document.getElementById('permission-modal');
   dom.addConfirmationBtn = document.getElementById('btn-add-confirmation');
   dom.confirmationsContainer = document.getElementById('confirmations-container');
@@ -131,7 +143,7 @@ function applyMasks() {
     });
   });
 
-  const moneyInputs = ['rentValue', 'benefitValue', 'income', 'spouseIncome'];
+  const moneyInputs = ['rentValue', 'benefitValue', 'income', 'spouseIncome', 'loanAmount'];
   moneyInputs.forEach((id) => {
     const input = document.getElementById(id);
     if (input) applyMoneyMask(input);
@@ -445,59 +457,71 @@ function submitSectionTwo() {
   showSection(2);
 }
 
-function submitSectionThree() {
-  saveSectionsFn({ section3: {} }, { metadata: { step: 'section3', lastStepAt: new Date().toISOString() } });
-  showSection(3);
-}
-
-function submitSectionFour(event) {
+function submitSectionThree(event) {
   event.preventDefault();
+
   const container = document.getElementById('confirmations-container');
   const items = container ? Array.from(container.children) : [];
   const confirmations = [];
+
   for (const item of items) {
-    const nome = item.querySelector('.conf-name').value.trim();
-    const whatsapp = item.querySelector('.conf-whatsapp').value.trim();
-    const relation = item.querySelector('.conf-relation').value.trim();
-    const cep = item.querySelector('.conf-cep').value.replace(/\D/g, '');
-    const numero = item.querySelector('.conf-number').value.trim();
+    const nome = item.querySelector('.conf-name')?.value.trim() || '';
+    const whatsapp = item.querySelector('.conf-whatsapp')?.value.trim() || '';
+    const relation = item.querySelector('.conf-relation')?.value.trim() || '';
+    const cep = item.querySelector('.conf-cep')?.value.replace(/\D/g, '') || '';
+    const numero = item.querySelector('.conf-number')?.value.trim() || '';
     const tipoCasaEl = item.querySelector('.conf-house-select');
-    const tipoCasa = tipoCasaEl ? { value: tipoCasaEl.value } : null;
+    const tipoCasa = tipoCasaEl ? tipoCasaEl.value : '';
     const counter = item.querySelector('.conf-count');
     const gpsInfo = item.dataset.gpsLat ? true : false;
     const fieldId = item.dataset.fieldId;
     const filesCount = counter ? parseInt(counter.textContent, 10) || 0 : 0;
-    if (!nome || !whatsapp || !relation || cep.length !== 8 || !numero || !tipoCasa || !tipoCasa.value || filesCount === 0 || !gpsInfo) {
-      alert('Complete todos os campos das confirmações de endereço antes de finalizar.');
-      item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
+
+    const incompleto = !nome || !whatsapp || !relation || cep.length !== 8 || !numero || !tipoCasa || filesCount === 0 || !gpsInfo;
+
+    if (incompleto) {
+      const missing = [];
+      if (!nome) missing.push('Nome');
+      if (!whatsapp) missing.push('WhatsApp');
+      if (!relation) missing.push('Parentesco');
+      if (cep.length !== 8) missing.push('CEP válido');
+      if (!numero) missing.push('Número');
+      if (!tipoCasa) missing.push('Tipo de casa');
+      if (filesCount === 0) missing.push('Foto da casa');
+      if (!gpsInfo) missing.push('GPS');
+
+      alert(`⚠️ Confirmação incompleta!\n\nFaltando: ${missing.join(', ')}\n\nVocê pode salvar mesmo assim e completar depois quando visitar a casa do parente.`);
     }
+
     confirmations.push({
       nome,
       whatsapp,
       qualParente: relation,
       cep,
       numero,
-      rua: item.querySelector('.conf-street').value,
-      bairro: item.querySelector('.conf-district').value,
-      cidade: item.querySelector('.conf-city').value,
-      tipoCasa: tipoCasa.value,
+      rua: item.querySelector('.conf-street')?.value || '',
+      bairro: item.querySelector('.conf-district')?.value || '',
+      cidade: item.querySelector('.conf-city')?.value || '',
+      tipoCasa,
       filesField: fieldId,
-      gps: {
+      incompleto,
+      gps: gpsInfo ? {
         latitude: parseFloat(item.dataset.gpsLat),
         longitude: parseFloat(item.dataset.gpsLng),
         accuracy: parseFloat(item.dataset.gpsAccuracy),
         timestamp: item.dataset.gpsTimestamp,
-      },
+      } : null,
     });
   }
-  saveSectionsFn({ section4: { confirmations } }, { status: 'salva', markSaved: true, metadata: { step: 'section4', lastStepAt: new Date().toISOString() } });
-  // garantir atualização de listas pós-salvar
+
+  saveSectionsFn({ section3: {}, section4: { confirmations } }, { status: 'salva', markSaved: true, metadata: { step: 'section3', lastStepAt: new Date().toISOString() } });
+
   try {
     const evt = new CustomEvent('visita-salva');
     window.dispatchEvent(evt);
   } catch (_) {}
-  alert('Visita salva com sucesso! Envie quando desejar pelo menu.');
+
+  alert('✓ Visita salva com sucesso! Envie quando desejar pelo menu.');
 }
 
 function collectConfirmations() {
@@ -646,21 +670,19 @@ function attachFormHandlers() {
   dom.forms[2].addEventListener('submit', (event) => {
     event.preventDefault();
     if (validateForm3()) {
-      submitSectionThree();
+      submitSectionThree(event);
     } else {
       currentIndex = 0;
       showValidationModal(emptyFields[currentIndex], true);
     }
   });
 
-  dom.forms[3].addEventListener('submit', submitSectionFour);
-
   dom.forms[0].addEventListener('input', () => scheduleAutosave('section1'));
   dom.forms[0].addEventListener('change', () => scheduleAutosave('section1'));
   dom.forms[1].addEventListener('input', () => scheduleAutosave('section2'));
   dom.forms[1].addEventListener('change', () => scheduleAutosave('section2'));
-  dom.forms[3].addEventListener('input', () => scheduleAutosave('section4'));
-  dom.forms[3].addEventListener('change', () => scheduleAutosave('section4'));
+  dom.forms[2].addEventListener('input', () => scheduleAutosave('section4'));
+  dom.forms[2].addEventListener('change', () => scheduleAutosave('section4'));
 }
 
 async function buscarCep(cep) {
@@ -753,11 +775,10 @@ function attachCepHandlers() {
   }
 
   cepConfirmBtn.addEventListener('click', () => {
-    if (pendingCepData) {
-      preencherCamposEndereco(pendingCepData.data, pendingCepData.type);
-      pendingCepData = null;
-    }
     cepModal.classList.remove('show');
+    if (pendingCepData) {
+      cepNumberModal.classList.add('show');
+    }
   });
 
   cepCancelBtn.addEventListener('click', () => {
@@ -768,6 +789,35 @@ function attachCepHandlers() {
     }
     pendingCepData = null;
     cepModal.classList.remove('show');
+  });
+
+  cepHasComplementCheckbox?.addEventListener('change', function() {
+    if (this.checked) {
+      cepComplementField.style.display = 'block';
+    } else {
+      cepComplementField.style.display = 'none';
+      cepComplementInput.value = '';
+    }
+  });
+
+  cepNumberOkBtn?.addEventListener('click', () => {
+    const number = cepNumberInput.value.trim();
+    if (!number) {
+      alert('Por favor, informe o número da casa.');
+      return;
+    }
+
+    if (pendingCepData) {
+      const complement = cepHasComplementCheckbox.checked ? cepComplementInput.value.trim() : '';
+      preencherCamposEnderecoCompleto(pendingCepData.data, pendingCepData.type, number, complement);
+
+      cepNumberInput.value = '';
+      cepComplementInput.value = '';
+      cepHasComplementCheckbox.checked = false;
+      cepComplementField.style.display = 'none';
+      pendingCepData = null;
+    }
+    cepNumberModal.classList.remove('show');
   });
 }
 
@@ -823,6 +873,40 @@ function preencherCamposEndereco(data, type) {
   }
   
   console.log('[CEP] ✅ Campos preenchidos com sucesso');
+}
+
+function preencherCamposEnderecoCompleto(data, type, number, complement) {
+  console.log('[CEP] 📝 Preenchendo endereço completo, tipo:', type);
+
+  const fieldIds = {
+    cliente: ['street', 'district', 'city', 'number', 'complement'],
+    trabalho: ['workStreet', 'workDistrict', 'workCity', 'workNumber'],
+    'trabalho-conjuge': ['spouseWorkStreet', 'spouseWorkDistrict', 'spouseWorkCity', 'spouseWorkNumber'],
+  }[type];
+
+  if (fieldIds) {
+    document.getElementById(fieldIds[0]).value = data.logradouro || '';
+    document.getElementById(fieldIds[1]).value = data.bairro || '';
+    document.getElementById(fieldIds[2]).value = `${data.localidade}/${data.uf}`;
+    document.getElementById(fieldIds[3]).value = number;
+    if (fieldIds[4] && complement) {
+      document.getElementById(fieldIds[4]).value = complement;
+    }
+  }
+
+  if (type === 'cliente') {
+    const fullAddressDiv = document.getElementById('full-address-cliente');
+    const fullAddressTextarea = document.getElementById('fullAddress');
+
+    const complementText = complement ? ` - ${complement}` : '';
+    const addressText = `${data.logradouro}, ${number}${complementText}\n${data.bairro} - ${data.localidade}/${data.uf}\nCEP: ${data.cep}`;
+
+    fullAddressTextarea.value = addressText;
+    fullAddressDiv.style.display = 'block';
+  }
+
+  console.log('[CEP] ✅ Endereço completo preenchido');
+  scheduleAutosave('section1');
 }
 
 function limparCamposEndereco(type) {
