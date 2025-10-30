@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formulário de Visita Completo</title>
+    <style>
+      :root {
+        --bg: #f5f5f5;
+        --card: #ffffff;
+        --muted: #4b5563;
+        --text: #000000;
+        --primary: #16a34a;
+        --primary-700: #15803d;
+        --input: #ffffff;
+        --input-border: #d1d5db;
+        --ring: rgba(22, 163, 74, 0.3);
+        --danger: #dc2626;
+      }
+      [data-theme="dark"] {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --muted: #94a3b8;
+        --text: #f1f5f9;
+        --primary: #22c55e;
+        --primary-700: #16a34a;
+        --input: #334155;
+        --input-border: #475569;
+        --ring: rgba(34, 197, 94, 0.4);
+        --danger: #ef4444;
+      }
+      
+      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      html, body { height: 100%; }
+      body {
+        margin: 0; 
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: grid; 
+        place-items: center; 
+        padding: 20px 16px;
+        line-height: 1.5;
+      }
+      
+      .container { width: 100%; max-width: 580px; }
+      .card {
+        background: var(--card);
+        border: 2px solid var(--input-border);
+        border-radius: 20px; 
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      }
+      
+      .topbar { 
+        display: flex; 
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px; 
+      }
+      
+      .back-btn {
+        background: var(--input); 
+        border: 2px solid var(--input-border); 
+        color: var(--text); 
+        padding: 10px 14px; 
+        border-radius: 12px; 
+        cursor: pointer;
+        font-size: 18px;
+        min-width: 50px;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+      }
+      .back-btn:active { transform: scale(0.95); }
+      
+      .theme-btn { 
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: var(--input); 
+        border: 2px solid var(--input-border); 
+        color: var(--text); 
+        padding: 10px 14px; 
+        border-radius: 12px; 
+        cursor: pointer;
+        font-size: 18px;
+        min-width: 50px;
+        min-height: 50px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease;
+      }
+      .theme-btn:hover { transform: scale(1.05); }
+      .theme-btn:active { transform: scale(0.95); }
+      
+      h1 { 
+        margin: 0 0 8px 0; 
+        font-size: 28px; 
+        text-align: center; 
+        font-weight: 800;
+        color: var(--text);
+      }
+      p.sub { 
+        margin: 0 0 24px 0; 
+        color: var(--muted); 
+        text-align: center; 
+        font-size: 16px;
+        font-weight: 500;
+      }
+      
+      form { display: grid; grid-template-columns: 1fr; gap: 20px; }
+      .row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+      @media (min-width: 680px) {
+        .row-2 { grid-template-columns: 1fr 1fr; }
+        .row-3 { grid-template-columns: 2fr 1fr 1fr; }
+      }
+      
+      .field { display: flex; flex-direction: column; align-items: center; }
+      .label-row { 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 8px; 
+        justify-content: center;
+        margin-bottom: 8px;
+      }
+      
+      label { 
+        font-size: 17px; 
+        color: var(--text); 
+        text-align: center;
+        font-weight: 700;
+      }
+      .help { 
+        width: 100%; 
+        max-width: 480px; 
+        margin-top: 4px; 
+        font-size: 12px; 
+        color: var(--muted); 
+        text-align: center; 
+        font-weight: 400;
+      }
+      
+      input[type="text"], input[type="number"], input[type="tel"], input[type="search"] {
+        width: 100%;
+        background: var(--input);
+        color: var(--text);
+        border: 3px solid var(--input-border);
+        border-radius: 12px; 
+        padding: 18px 16px; 
+        font-size: 18px;
+        text-align: center;
+        outline: none; 
+        transition: border-color .2s ease, box-shadow .2s ease;
+        font-weight: 600;
+        min-height: 60px;
+      }
+      input::placeholder { color: var(--muted); opacity: 0.7; }
+      input:focus { 
+        border-color: var(--primary); 
+        box-shadow: 0 0 0 4px var(--ring); 
+      }
+      input:read-only {
+        background: var(--bg);
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      
+      .address-fields {
+        display: none;
+      }
+      .address-fields.visible {
+        display: grid;
+      }
+      
+      .cep-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+      }
+      .cep-modal.show { display: flex; }
+      .cep-modal-content {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+      .cep-modal-content h3 {
+        margin: 0 0 16px 0;
+        font-size: 22px;
+        color: var(--text);
+      }
+      .cep-modal-content p {
+        margin: 8px 0;
+        font-size: 16px;
+        color: var(--text);
+        line-height: 1.6;
+      }
+      .cep-modal-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+        justify-content: center;
+      }
+      .cep-modal-btn {
+        padding: 14px 24px;
+        border-radius: 10px;
+        border: none;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .cep-modal-btn:hover { transform: scale(1.05); }
+      .cep-modal-btn.confirm {
+        background: var(--primary);
+        color: white;
+      }
+      .cep-modal-btn.cancel {
+        background: var(--input-border);
+        color: var(--text);
+      }
+      
+      .actions { 
+        display: flex; 
+        gap: 12px; 
+        justify-content: center; 
+        margin-top: 8px; 
+      }
+      button {
+        appearance: none; 
+        border: 0; 
+        border-radius: 14px; 
+        padding: 18px 32px; 
+        font-weight: 800;
+        cursor: pointer; 
+        transition: transform .1s ease, filter .2s ease;
+        font-size: 18px;
+        min-height: 60px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .btn-primary { 
+        background: var(--primary); 
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      }
+      .btn-primary:active { 
+        transform: translateY(2px); 
+        box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+      }
+      
+      .modal { 
+        display: none; 
+        position: fixed; 
+        inset: 0; 
+        background: rgba(0,0,0,0.85); 
+        z-index: 999; 
+        align-items: center; 
+        justify-content: center; 
+        padding: 20px; 
+      }
+      .modal.show { display: flex; }
+      .modal-content { 
+        background: var(--card); 
+        border-radius: 20px; 
+        padding: 28px; 
+        max-width: 420px; 
+        width: 100%; 
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        border: 2px solid var(--input-border);
+      }
+      .modal-title { 
+        font-size: 22px; 
+        font-weight: 800; 
+        margin: 0 0 16px 0; 
+        text-align: center; 
+        color: var(--text); 
+      }
+      .modal-text { 
+        font-size: 17px; 
+        color: var(--text); 
+        margin: 0 0 24px 0; 
+        text-align: center;
+        line-height: 1.6;
+      }
+      .modal-text strong { color: var(--primary); font-weight: 800; }
+      .modal-actions { display: flex; gap: 12px; flex-direction: column; }
+      .btn-modal { 
+        appearance: none; 
+        border: 0; 
+        border-radius: 14px; 
+        padding: 18px 20px; 
+        font-weight: 800; 
+        cursor: pointer; 
+        font-size: 17px;
+        min-height: 60px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .btn-fill { 
+        background: var(--primary); 
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      }
+      .btn-skip { 
+        background: #6b7280; 
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+      }
+      
+      .radio-group {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 480px;
+      }
+      .radio-option { flex: 1; min-width: 100px; }
+      .radio-option input[type="radio"] { display: none; }
+      .radio-label {
+        display: block;
+        background: var(--input);
+        border: 3px solid var(--input-border);
+        border-radius: 12px;
+        padding: 16px 12px;
+        text-align: center;
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--text);
+        cursor: pointer;
+        transition: all .2s ease;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .radio-option input[type="radio"]:checked + .radio-label {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #ffffff;
+        box-shadow: 0 4px 12px var(--ring);
+      }
+      .radio-label:active { transform: scale(0.98); }
+      
+      .conditional-field { display: none; margin-top: 16px; }
+      .conditional-field.show { display: block; }
+      .conditional-section { display: none; }
+      .conditional-section.show { display: block; }
+      .section-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text);
+        text-align: center;
+        margin: 24px 0 16px 0;
+        padding-top: 24px;
+        border-top: 2px solid var(--input-border);
+      }
+
+      .location-box {
+        background: var(--input);
+        border: 3px solid var(--input-border);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 24px;
+        text-align: center;
+        display: none;
+      }
+      .location-box.capturing {
+        border-color: #f59e0b;
+        background: linear-gradient(135deg, var(--input) 0%, rgba(245, 158, 11, 0.1) 100%);
+      }
+      .location-box.success {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, var(--input) 0%, rgba(22, 163, 74, 0.1) 100%);
+      }
+      .location-box.error {
+        border-color: #dc2626;
+        background: linear-gradient(135deg, var(--input) 0%, rgba(220, 38, 38, 0.1) 100%);
+      }
+      .location-icon { font-size: 32px; margin-bottom: 8px; }
+      .location-status {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .location-accuracy {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+      }
+      .location-coords {
+        font-size: 12px;
+        color: var(--muted);
+        font-family: monospace;
+        margin-bottom: 8px;
+      }
+      .location-time {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+      .btn-recapture {
+        background: var(--primary);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .btn-recapture:active { transform: scale(0.98); }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      .location-box.capturing .location-icon { animation: pulse 1.5s ease-in-out infinite; }
+
+      .upload-btn {
+        width: 100%;
+        background: var(--primary);
+        color: #ffffff;
+        border: 3px solid var(--primary);
+        border-radius: 12px;
+        padding: 20px 16px;
+        font-size: 18px;
+        text-align: center;
+        cursor: pointer;
+        transition: all .2s ease;
+        font-weight: 800;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .upload-btn:active {
+        transform: scale(0.98);
+        box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+      }
+      .file-input { display: none; }
+      .files-preview {
+        width: 100%;
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .file-item {
+        background: var(--input);
+        border: 2px solid var(--input-border);
+        border-radius: 10px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .file-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+      }
+      .file-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .file-size { font-size: 12px; color: var(--muted); }
+      .file-preview-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid var(--input-border);
+      }
+      .file-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        color: #ffffff;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .remove-file-btn {
+        background: var(--danger);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        min-width: 60px;
+        min-height: 44px;
+      }
+      .remove-file-btn:active { transform: scale(0.95); }
+      .count-badge {
+        background: var(--primary);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 14px;
+        font-weight: 800;
+        min-width: 28px;
+        text-align: center;
+      }
+
+      .section { display: none; }
+      .section.active { display: block; }
+
+      .confirmations-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin: 24px 0;
+      }
+      .confirmation-item {
+        background: var(--input);
+        border: 3px solid var(--input-border);
+        border-radius: 16px;
+        padding: 20px;
+        position: relative;
+      }
+      .confirmation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .confirmation-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .btn-remove-confirmation {
+        background: var(--danger);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        min-height: 40px;
+      }
+      .btn-remove-confirmation:active { transform: scale(0.95); }
+      .btn-add-confirmation {
+        width: 100%;
+        background: var(--primary);
+        color: #ffffff;
+        border: 3px solid var(--primary);
+        border-radius: 12px;
+        padding: 18px 16px;
+        font-size: 18px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 800;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 24px;
+      }
+      .btn-add-confirmation:active { transform: scale(0.98); }
+      .btn-capture-gps {
+        background: #f59e0b;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        min-height: 50px;
+        width: 100%;
+        margin-top: 12px;
+      }
+      .btn-capture-gps:active { transform: scale(0.98); }
+      .btn-capture-gps.capturing {
+        background: #d97706;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      .btn-capture-gps.success { background: var(--primary); }
+      .gps-info {
+        background: rgba(22, 163, 74, 0.1);
+        border: 2px solid var(--primary);
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--text);
+        text-align: center;
+      }
+      .gps-info strong {
+        color: var(--primary);
+        font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="topbar">
+          <button id="back-btn" type="button" class="back-btn" style="display: none;" aria-label="Voltar">←</button>
+        </div>
+        
+        <button id="theme-toggle" type="button" class="theme-btn" aria-label="Alternar tema">◐</button>
+
+        <div id="section1" class="section active">
+          <h1>Ficha de Cadastro</h1>
+          <p class="sub">Preencha todos os campos</p>
+
+          <div id="location-box" class="location-box capturing">
+            <div class="location-icon" id="location-icon">[GPS]</div>
+            <div class="location-status" id="location-status">Capturando localização...</div>
+            <div class="location-accuracy" id="location-accuracy">Aguarde...</div>
+            <div class="location-coords" id="location-coords">--</div>
+            <div class="location-time" id="location-time">--</div>
+            <button type="button" class="btn-recapture" id="btn-recapture" style="display: none;">[↻] Recapturar</button>
+          </div>
+
+          <form id="form1">
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label for="sender">Seu nome</label>
+                </div>
+                <input id="sender" name="sender" type="text" placeholder="Seu nome" data-label="Seu nome" />
+                <div class="help">Coloque seu nome. Ex.: João.</div>
+              </div>
+            </div>
+
+            <div class="row row-2">
+              <div class="field">
+                <div class="label-row">
+                  <label for="clientName">Nome completo do cliente</label>
+                </div>
+                <input id="clientName" name="clientName" type="text" placeholder="Ex.: Maria da Silva" data-label="Nome completo do cliente" />
+                <div class="help">Ex.: João Pedro da Silva.</div>
+              </div>
+              <div class="field">
+                <div class="label-row">
+                  <label for="age">Idade</label>
+                </div>
+                <input id="age" name="age" type="number" min="0" max="120" inputmode="numeric" placeholder="Ex.: 55" data-label="Idade" />
+                <div class="help">SOMENTE NÚMEROS.</div>
+              </div>
+            </div>
+
+            <div class="row row-2">
+              <div class="field">
+                <div class="label-row">
+                  <label for="cpf">CPF</label>
+                </div>
+                <input id="cpf" name="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" data-label="CPF" />
+                <div class="help">SOMENTE NÚMEROS.</div>
+              </div>
+              <div class="field">
+                <div class="label-row">
+                  <label for="whatsapp">WhatsApp</label>
+                </div>
+                <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" placeholder="(11) 90000-0000" maxlength="16" data-label="WhatsApp" />
+                <div class="help">Ex.: 11912345678.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label for="cep">CEP do cliente</label>
+                </div>
+                <input id="cep" name="cep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9" data-label="CEP do cliente" />
+                <div class="help">Digite o CEP para buscar o endereço automaticamente</div>
+              </div>
+            </div>
+
+            <div class="address-fields row row-2" id="address-fields-cliente">
+              <div class="field">
+                <div class="label-row">
+                  <label for="street">Rua do cliente</label>
+                </div>
+                <input id="street" name="street" type="text" placeholder="Ex.: Rua das Flores" data-label="Rua do cliente" readonly />
+                <div class="help">Preenchido automaticamente</div>
+              </div>
+              <div class="field">
+                <div class="label-row">
+                  <label for="number">Número do cliente</label>
+                </div>
+                <input id="number" name="number" type="text" placeholder="Ex.: 123" data-label="Número do cliente" />
+                <div class="help">Digite o número da residência</div>
+              </div>
+            </div>
+
+            <div class="address-fields row row-2" id="address-fields-cliente-2">
+              <div class="field">
+                <div class="label-row">
+                  <label for="district">Bairro do cliente</label>
+                </div>
+                <input id="district" name="district" type="text" placeholder="Ex.: Centro" data-label="Bairro do cliente" readonly />
+                <div class="help">Preenchido automaticamente</div>
+              </div>
+              <div class="field">
+                <div class="label-row">
+                  <label for="city">Cidade do cliente</label>
+                </div>
+                <input id="city" name="city" type="text" placeholder="Ex.: São Paulo" data-label="Cidade do cliente" readonly />
+                <div class="help">Preenchido automaticamente</div>
+              </div>
+            </div>
+
+            <div class="address-fields row" id="address-fields-cliente-3">
+              <div class="field">
+                <div class="label-row">
+                  <label for="complement">Complemento do cliente</label>
+                </div>
+                <input id="complement" name="complement" type="text" placeholder="Apto, bloco, referência" data-label="Complemento do cliente" />
+                <div class="help">Se precisar: Apto 12, Bloco B, perto da escola</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label for="residents">Quantas pessoas moram na residência</label>
+                </div>
+                <input id="residents" name="residents" type="number" min="1" max="99" inputmode="numeric" placeholder="Ex.: 3" data-label="Quantas pessoas moram na residência" />
+                <div class="help">SOMENTE NÚMEROS.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label>Tipo de casa</label>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="house-own" name="houseType" value="propria" data-label="Tipo de casa" />
+                    <label for="house-own" class="radio-label">Própria</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="house-rent" name="houseType" value="alugada" data-label="Tipo de casa" />
+                    <label for="house-rent" class="radio-label">Alugada</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="house-ap" name="houseType" value="ap" data-label="Tipo de casa" />
+                    <label for="house-ap" class="radio-label">AP</label>
+                  </div>
+                </div>
+                <div class="help">Selecione uma opção.</div>
+                
+                <div id="rent-value-field" class="conditional-field">
+                  <div class="label-row">
+                    <label for="rentValue">Valor do aluguel</label>
+                  </div>
+                  <input id="rentValue" name="rentValue" type="text" inputmode="decimal" placeholder="Ex.: R$ 1.500,00" data-label="Valor do aluguel" />
+                  <div class="help">Digite o valor. Ex.: 1500 vira R$ 1.500,00.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary">Próximo</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="section2" class="section">
+          <h1>Dados Profissionais</h1>
+          <p class="sub">Informações sobre trabalho e família</p>
+          <form id="form2">
+            
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label>Recebe benefício?</label>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="benefit-yes" name="benefit" value="sim" data-label="Recebe benefício" />
+                    <label for="benefit-yes" class="radio-label">Sim</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="benefit-no" name="benefit" value="nao" data-label="Recebe benefício" />
+                    <label for="benefit-no" class="radio-label">Não</label>
+                  </div>
+                </div>
+                <div class="help">Selecione uma opção.</div>
+                
+                <div id="benefit-value-field" class="conditional-field">
+                  <div class="label-row">
+                    <label for="benefitValue">Valor do benefício</label>
+                  </div>
+                  <input id="benefitValue" name="benefitValue" type="text" inputmode="decimal" placeholder="Ex.: R$ 1.500,00" data-label="Valor do benefício" />
+                  <div class="help">Digite o valor. Ex.: 1500 vira R$ 1.500,00.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label>Trabalha registrado?</label>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="works-yes" name="works" value="sim" data-label="Trabalha registrado" />
+                    <label for="works-yes" class="radio-label">Sim</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="works-no" name="works" value="nao" data-label="Trabalha registrado" />
+                    <label for="works-no" class="radio-label">Não</label>
+                  </div>
+                </div>
+                <div class="help">Selecione uma opção.</div>
+              </div>
+            </div>
+
+            <div id="works-fields" class="conditional-section">
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="companyName">Nome da empresa</label>
+                  </div>
+                  <input id="companyName" name="companyName" type="text" placeholder="Ex.: Empresa XYZ Ltda" data-label="Nome da empresa" />
+                  <div class="help">Nome completo da empresa.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="workTime">Quanto tempo de registro</label>
+                  </div>
+                  <input id="workTime" name="workTime" type="text" placeholder="Ex.: 2 anos" data-label="Quanto tempo de registro" />
+                  <div class="help">Ex.: 2 anos, 6 meses.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="workCep">CEP do trabalho</label>
+                  </div>
+                  <input id="workCep" name="workCep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9" data-label="CEP do trabalho" />
+                  <div class="help">Digite o CEP para buscar o endereço automaticamente</div>
+                </div>
+              </div>
+
+              <div class="address-fields row row-2" id="address-fields-trabalho">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="workStreet">Rua do trabalho</label>
+                  </div>
+                  <input id="workStreet" name="workStreet" type="text" placeholder="Ex.: Rua A" data-label="Rua do trabalho" readonly />
+                  <div class="help">Preenchido automaticamente</div>
+                </div>
+                <div class="field">
+                  <div class="label-row">
+                    <label for="workNumber">Número do trabalho</label>
+                  </div>
+                  <input id="workNumber" name="workNumber" type="text" placeholder="Ex.: 123" data-label="Número do trabalho" />
+                  <div class="help">Digite o número</div>
+                </div>
+              </div>
+
+              <div class="address-fields row row-2" id="address-fields-trabalho-2">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="workDistrict">Bairro do trabalho</label>
+                  </div>
+                  <input id="workDistrict" name="workDistrict" type="text" placeholder="Ex.: Centro" data-label="Bairro do trabalho" readonly />
+                  <div class="help">Preenchido automaticamente</div>
+                </div>
+                <div class="field">
+                  <div class="label-row">
+                    <label for="workCity">Cidade do trabalho</label>
+                  </div>
+                  <input id="workCity" name="workCity" type="text" placeholder="Ex.: São Paulo" data-label="Cidade do trabalho" readonly />
+                  <div class="help">Preenchido automaticamente</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label for="profession">Profissão</label>
+                </div>
+                <input id="profession" name="profession" type="text" placeholder="Ex.: Professor" data-label="Profissão" />
+                <div class="help">Ex.: Vendedor, Motorista.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label for="income">Renda mensal</label>
+                </div>
+                <input id="income" name="income" type="text" inputmode="decimal" placeholder="Ex.: R$ 3.000,00" data-label="Renda mensal" />
+                <div class="help">Digite o valor. Ex.: 3000 vira R$ 3.000,00.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label>Casado(a)?</label>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="married-yes" name="married" value="sim" data-label="Casado(a)" />
+                    <label for="married-yes" class="radio-label">Sim</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="married-no" name="married" value="nao" data-label="Casado(a)" />
+                    <label for="married-no" class="radio-label">Não</label>
+                  </div>
+                </div>
+                <div class="help">Selecione uma opção.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <div class="label-row">
+                  <label>Tem filhos?</label>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="children-yes" name="children" value="sim" data-label="Tem filhos" />
+                    <label for="children-yes" class="radio-label">Sim</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="children-no" name="children" value="nao" data-label="Tem filhos" />
+                    <label for="children-no" class="radio-label">Não</label>
+                  </div>
+                </div>
+                <div class="help">Selecione uma opção.</div>
+              </div>
+            </div>
+
+            <div id="children-fields" class="conditional-section">
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="childrenAge">Idade dos filhos</label>
+                  </div>
+                  <input id="childrenAge" name="childrenAge" type="text" placeholder="Ex.: 10, 15, 20" data-label="Idade dos filhos" />
+                  <div class="help">Separe por vírgula. Ex.: 10, 15.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="childrenWorks">Algum filho trabalha registrado?</label>
+                  </div>
+                  <input id="childrenWorks" name="childrenWorks" type="text" placeholder="Ex.: Sim, o mais velho" data-label="Algum filho trabalha registrado" />
+                  <div class="help">Descreva se algum filho trabalha.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="spouse-section" class="conditional-section">
+              <h2 class="section-title">Dados do Cônjuge</h2>
+
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label>Marido/esposa trabalha registrado?</label>
+                  </div>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="spouse-works-yes" name="spouseWorks" value="sim" data-label="Marido/esposa trabalha registrado" />
+                      <label for="spouse-works-yes" class="radio-label">Sim</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="spouse-works-no" name="spouseWorks" value="nao" data-label="Marido/esposa trabalha registrado" />
+                      <label for="spouse-works-no" class="radio-label">Não</label>
+                    </div>
+                  </div>
+                  <div class="help">Selecione uma opção.</div>
+                </div>
+              </div>
+
+              <div id="spouse-works-fields" class="conditional-section">
+                <div class="row">
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseCompanyName">Nome da empresa do cônjuge</label>
+                    </div>
+                    <input id="spouseCompanyName" name="spouseCompanyName" type="text" placeholder="Ex.: Empresa ABC Ltda" data-label="Nome da empresa do cônjuge" />
+                    <div class="help">Nome completo da empresa.</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseWorkTime">Tempo de registro do cônjuge</label>
+                    </div>
+                    <input id="spouseWorkTime" name="spouseWorkTime" type="text" placeholder="Ex.: 3 anos" data-label="Tempo de registro do cônjuge" />
+                    <div class="help">Ex.: 1 ano, 6 meses.</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseWorkCep">CEP do trabalho do cônjuge</label>
+                    </div>
+                    <input id="spouseWorkCep" name="spouseWorkCep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9" data-label="CEP do trabalho do cônjuge" />
+                    <div class="help">Digite o CEP para buscar o endereço automaticamente</div>
+                  </div>
+                </div>
+
+                <div class="address-fields row row-2" id="address-fields-trabalho-conjuge">
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseWorkStreet">Rua do trabalho do cônjuge</label>
+                    </div>
+                    <input id="spouseWorkStreet" name="spouseWorkStreet" type="text" placeholder="Ex.: Rua B" data-label="Rua do trabalho do cônjuge" readonly />
+                    <div class="help">Preenchido automaticamente</div>
+                  </div>
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseWorkNumber">Número do trabalho do cônjuge</label>
+                    </div>
+                    <input id="spouseWorkNumber" name="spouseWorkNumber" type="text" placeholder="Ex.: 456" data-label="Número do trabalho do cônjuge" />
+                    <div class="help">Digite o número</div>
+                  </div>
+                </div>
+
+                <div class="address-fields row row-2" id="address-fields-trabalho-conjuge-2">
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseWorkDistrict">Bairro do trabalho do cônjuge</label>
+                    </div>
+                    <input id="spouseWorkDistrict" name="spouseWorkDistrict" type="text" placeholder="Ex.: Centro" data-label="Bairro do trabalho do cônjuge" readonly />
+                    <div class="help">Preenchido automaticamente</div>
+                  </div>
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseWorkCity">Cidade do trabalho do cônjuge</label>
+                    </div>
+                    <input id="spouseWorkCity" name="spouseWorkCity" type="text" placeholder="Ex.: São Paulo" data-label="Cidade do trabalho do cônjuge" readonly />
+                    <div class="help">Preenchido automaticamente</div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="spouse-no-works-field" class="conditional-section">
+                <div class="row">
+                  <div class="field">
+                    <div class="label-row">
+                      <label for="spouseSideJob">Faz bico?</label>
+                    </div>
+                    <input id="spouseSideJob" name="spouseSideJob" type="text" placeholder="Ex.: Vende doces" data-label="Faz bico" />
+                    <div class="help">Descreva se faz algum bico.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="spouseProfession">Profissão do cônjuge</label>
+                  </div>
+                  <input id="spouseProfession" name="spouseProfession" type="text" placeholder="Ex.: Enfermeiro" data-label="Profissão do cônjuge" />
+                  <div class="help">Profissão do marido/esposa.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="spouseIncome">Renda mensal do cônjuge</label>
+                  </div>
+                  <input id="spouseIncome" name="spouseIncome" type="text" inputmode="decimal" placeholder="Ex.: R$ 2.500,00" data-label="Renda mensal do cônjuge" />
+                  <div class="help">Digite o valor. Ex.: 2500 vira R$ 2.500,00.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary">Próximo</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="section3" class="section">
+          <h1>Documentos e Fotos</h1>
+          <p class="sub">Envie fotos e documentos</p>
+          <form id="form3">
+            
+            <div class="field">
+              <div class="label-row">
+                <label for="fotoCasa">Foto da casa</label>
+                <span class="count-badge" id="count-fotoCasa">0</span>
+              </div>
+              <input type="file" id="fotoCasa" name="fotoCasa" class="file-input" accept="image/*,application/pdf" multiple data-label="Foto da casa" />
+              <label for="fotoCasa" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Tire várias fotos da casa.</div>
+              <div class="files-preview" id="preview-fotoCasa"></div>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="fotoCliente">Foto do cliente (segurando o RG)</label>
+                <span class="count-badge" id="count-fotoCliente">0</span>
+              </div>
+              <input type="file" id="fotoCliente" name="fotoCliente" class="file-input" accept="image/*,application/pdf" multiple data-label="Foto do cliente segurando o RG" />
+              <label for="fotoCliente" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Cliente deve segurar o RG ao lado do rosto.</div>
+              <div class="files-preview" id="preview-fotoCliente"></div>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="comprovanteResidencia">Comprovante de residência/IPTU</label>
+                <span class="count-badge" id="count-comprovanteResidencia">0</span>
+              </div>
+              <input type="file" id="comprovanteResidencia" name="comprovanteResidencia" class="file-input" accept="image/*,application/pdf" multiple data-label="Comprovante de residência/IPTU" />
+              <label for="comprovanteResidencia" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Conta de luz, água, gás ou IPTU.</div>
+              <div class="files-preview" id="preview-comprovanteResidencia"></div>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="carteiraTrabalho">Carteira de trabalho</label>
+                <span class="count-badge" id="count-carteiraTrabalho">0</span>
+              </div>
+              <input type="file" id="carteiraTrabalho" name="carteiraTrabalho" class="file-input" accept="image/*,application/pdf" multiple data-label="Carteira de trabalho" />
+              <label for="carteiraTrabalho" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Todas as páginas importantes.</div>
+              <div class="files-preview" id="preview-carteiraTrabalho"></div>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="holerite">Holerite</label>
+                <span class="count-badge" id="count-holerite">0</span>
+              </div>
+              <input type="file" id="holerite" name="holerite" class="file-input" accept="image/*,application/pdf" multiple data-label="Holerite" />
+              <label for="holerite" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Últimos holerites.</div>
+              <div class="files-preview" id="preview-holerite"></div>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="extratoBeneficio">Extrato do benefício</label>
+                <span class="count-badge" id="count-extratoBeneficio">0</span>
+              </div>
+              <input type="file" id="extratoBeneficio" name="extratoBeneficio" class="file-input" accept="image/*,application/pdf" multiple data-label="Extrato do benefício" />
+              <label for="extratoBeneficio" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Se recebe benefício, envie o extrato.</div>
+              <div class="files-preview" id="preview-extratoBeneficio"></div>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="rg">RG frente/verso</label>
+                <span class="count-badge" id="count-rg">0</span>
+              </div>
+              <input type="file" id="rg" name="rg" class="file-input" accept="image/*,application/pdf" multiple data-label="RG frente/verso" />
+              <label for="rg" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Frente e verso do RG.</div>
+              <div class="files-preview" id="preview-rg"></div>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="redesSociais">Redes sociais</label>
+                <span class="count-badge" id="count-redesSociais">0</span>
+              </div>
+              <input type="file" id="redesSociais" name="redesSociais" class="file-input" accept="image/*,application/pdf" multiple data-label="Redes sociais" />
+              <label for="redesSociais" class="upload-btn">
+                [+] Tirar foto ou escolher arquivo
+              </label>
+              <div class="help">Print das redes sociais do cliente.</div>
+              <div class="files-preview" id="preview-redesSociais"></div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary">Próximo</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="section4" class="section">
+          <h1>Confirmação de Endereço</h1>
+          <p class="sub">Adicione as confirmações de endereço dos parentes</p>
+          <form id="form4">
+            <div class="field">
+              <div class="help" style="margin-bottom: 20px;">Clique no botão abaixo para adicionar confirmações de endereço com foto e GPS</div>
+              
+              <button type="button" id="btn-add-confirmation" class="btn-add-confirmation">
+                [+] Adicionar Confirmação de Endereço
+              </button>
+              
+              <div id="confirmations-container" class="confirmations-container"></div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary">Finalizar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="validation-modal" class="modal">
+      <div class="modal-content">
+        <h2 class="modal-title" id="modal-title">Faltou preencher um campo</h2>
+        <p class="modal-text" id="modal-message">O campo <strong id="missing-field"></strong> não foi preenchido.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal btn-fill" id="btn-fill">Preencher agora</button>
+          <button type="button" class="btn-modal btn-skip" id="btn-skip">Continuar sem esse dado</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cep-modal" class="cep-modal">
+      <div class="cep-modal-content">
+        <h3>Confirmar Endereço</h3>
+        <p id="cep-modal-address"></p>
+        <div class="cep-modal-actions">
+          <button type="button" class="cep-modal-btn confirm" id="cep-confirm">Confirmar</button>
+          <button type="button" class="cep-modal-btn cancel" id="cep-cancel">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="visita_completa.js"></script>
+  </body>
+</html>

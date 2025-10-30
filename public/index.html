@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Sistema de registro de visitas para motoboys" />
+    <meta name="theme-color" content="#16a34a" />
+    <title>Visita Completa</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json?v=2" />
+    <link rel="icon" type="image/png" href="/icons/entregador-192x192.png" />
+    <link rel="apple-touch-icon" href="/icons/entregador-192x192.png" />
+    
+    <link rel="stylesheet" href="/css/styles.css?v=7" />
+  </head>
+  <body>
+    <div id="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span>Formulário de Visita Completa</span>
+          <small id="active-visit-label"></small>
+        </div>
+        <div class="status-area">
+          <span id="sync-indicator" class="status-dot status-ok" title="Sincronizado"></span>
+        </div>
+        <div class="topbar-actions">
+          <button id="go-home" type="button" class="icon-action" aria-label="Ir para início">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.47 2.47a.75.75 0 0 1 1.06 0l8.25 8.25c.62.62.18 1.28-.53 1.28H19v8a1 1 0 0 1-1 1h-4.5a.5.5 0 0 1-.5-.5v-5h-2v5a.5.5 0 0 1-.5.5H6a1 1 0 0 1-1-1v-8H3.75c-.71 0-1.15-.66-.53-1.28l8.25-8.25Z"/></svg>
+          </button>
+          <button id="theme-toggle" type="button" class="icon-action" aria-label="Alternar tema">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z"/></svg>
+          </button>
+          <div class="menu-orb" id="menu-wrapper">
+            <button id="menu-main" type="button" class="menu-orb__trigger" aria-label="Menu de opções">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <div class="menu-orb__items" id="menu-items">
+              <button type="button" class="menu-orb__item" data-action="new-visit" title="Nova visita">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.25a.75.75 0 0 1 .75.75v8.25h8.25a.75.75 0 0 1 0 1.5H12.75v8.25a.75.75 0 0 1-1.5 0V12.75H3a.75.75 0 0 1 0-1.5h8.25V3a.75.75 0 0 1 .75-.75Z"/></svg>
+              </button>
+              <button type="button" class="menu-orb__item" data-action="history" title="Histórico">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.25a9.75 9.75 0 1 1-9.1 6.34.75.75 0 1 1 1.38.6A8.25 8.25 0 1 0 12 3.75a.75.75 0 0 1 0-1.5Zm.53 4.47a.75.75 0 0 1 .72.53l.74 2.47h2.26a.75.75 0 0 1 .43 1.36l-1.83 1.34.7 2.69a.75.75 0 0 1-1.12.84L12 15.92l-2.53 1.53a.75.75 0 0 1-1.12-.84l.7-2.69-1.83-1.34a.75.75 0 0 1 .43-1.36h2.26l.74-2.47a.75.75 0 0 1 .72-.53Z"/></svg>
+              </button>
+              <button type="button" class="menu-orb__item" data-action="send" title="Enviar visitas">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2.4 2.4a1 1 0 0 1 1.06-.24l18 7a1 1 0 0 1 0 1.84l-18 7A1 1 0 0 1 2 17.08l3.4-6.8L2 3.92a1 1 0 0 1 .4-1.52ZM7.45 11l-2.5 5 12.3-4.78Z"/></svg>
+              </button>
+              <button type="button" class="menu-orb__item" data-action="refresh" title="Sincronizar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.18 7.68a7 7 0 0 1 11.7-2.7l1.16 1.13V3.75a.75.75 0 0 1 1.5 0v4.5a.75.75 0 0 1-.75.75h-4.5a.75.75 0 0 1 0-1.5h2.42l-1-1A5.5 5.5 0 0 0 4.25 11a.75.75 0 0 1-1.5 0 6.98 6.98 0 0 1 .43-3.32Zm17.64 8.64a7 7 0 0 1-11.7 2.7l-1.16-1.13v2.36a.75.75 0 0 1-1.5 0v-4.5a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-2.42l1 1a5.5 5.5 0 0 0 9.82-3.12.75.75 0 1 1 1.5 0 6.96 6.96 0 0 1-.43 3.32Z"/></svg>
+              </button>
+              <button type="button" class="menu-orb__item" data-action="install-pwa" title="Instalar App" id="install-pwa-btn" style="display: none;">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.25 3a.75.75 0 0 1 1.5 0v8.69l2.47-2.47a.75.75 0 0 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0l-3.75-3.75a.75.75 0 1 1 1.06-1.06l2.47 2.47V3Zm-6 13.5a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75Zm1.5 3.75a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1-.75-.75Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="main-content">
+        <section id="hub-view" class="main-view active">
+          <div class="view-wrapper">
+            <h2>App de Visitas</h2>
+            <div id="hub-active" class="visit-list"></div>
+            <div class="visit-card__actions">
+              <button id="hub-new" class="primary">Nova visita</button>
+              <button id="hub-history">Histórico</button>
+              <button id="hub-send">Enviar visitas</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="form-view" class="main-view">
+          <div class="container">
+            <div class="card">
+              <div class="topbar-inner">
+                <button id="back-btn" type="button" class="back-btn" style="display: none;" aria-label="Voltar">←</button>
+              </div>
+
+              <div id="form-sections">
+                <div id="section1" class="section active">
+                  <h1>Ficha de Cadastro</h1>
+                  <p class="sub">Preencha todos os campos</p>
+
+                  <form id="form1">
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="sender">Seu nome</label>
+                        </div>
+                        <input id="sender" name="sender" type="text" placeholder="Seu nome" data-label="Seu nome" />
+                        <div class="help">Coloque seu nome. Ex.: João.</div>
+                      </div>
+                    </div>
+
+                    <div class="row row-2">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="clientName">Nome completo do cliente</label>
+                        </div>
+                        <input id="clientName" name="clientName" type="text" placeholder="Ex.: Maria da Silva" data-label="Nome completo do cliente" />
+                        <div class="help">Ex.: João Pedro da Silva.</div>
+                      </div>
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="age">Idade</label>
+                        </div>
+                        <input id="age" name="age" type="number" min="0" max="120" inputmode="numeric" placeholder="Ex.: 55" data-label="Idade" />
+                        <div class="help">SOMENTE NÚMEROS.</div>
+                      </div>
+                    </div>
+
+                    <div class="row row-2">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="cpf">CPF</label>
+                        </div>
+                        <input id="cpf" name="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" data-label="CPF" />
+                        <div class="help">SOMENTE NÚMEROS.</div>
+                      </div>
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="whatsapp">WhatsApp</label>
+                        </div>
+                        <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" placeholder="(11) 90000-0000" maxlength="16" data-label="WhatsApp" />
+                        <div class="help">Ex.: 11912345678.</div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="cep">CEP do cliente</label>
+                        </div>
+                        <input id="cep" name="cep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9" data-label="CEP do cliente" />
+                        <div class="help">Digite o CEP para buscar o endereço automaticamente</div>
+                      </div>
+                    </div>
+
+                    <div class="address-fields row row-2" id="address-fields-cliente">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="street">Rua do cliente</label>
+                        </div>
+                        <input id="street" name="street" type="text" placeholder="Ex.: Rua das Flores" data-label="Rua do cliente" readonly />
+                        <div class="help">Preenchido automaticamente</div>
+                      </div>
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="number">Nº da casa (onde mora o cliente)</label>
+                        </div>
+                        <input id="number" name="number" type="text" placeholder="Ex.: 123" data-label="Nº da casa (onde mora o cliente)" />
+                        <div class="help">Número da residência (ex.: 123). Não é telefone.</div>
+                      </div>
+                    </div>
+
+                    <div class="address-fields row row-2" id="address-fields-cliente-2">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="district">Bairro do cliente</label>
+                        </div>
+                        <input id="district" name="district" type="text" placeholder="Ex.: Centro" data-label="Bairro do cliente" readonly />
+                        <div class="help">Preenchido automaticamente</div>
+                      </div>
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="city">Cidade do cliente</label>
+                        </div>
+                        <input id="city" name="city" type="text" placeholder="Ex.: São Paulo" data-label="Cidade do cliente" readonly />
+                        <div class="help">Preenchido automaticamente</div>
+                      </div>
+                    </div>
+
+                    <div class="address-fields row" id="address-fields-cliente-3">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="complement">Complemento do cliente</label>
+                        </div>
+                        <input id="complement" name="complement" type="text" placeholder="Apto, bloco, referência" data-label="Complemento do cliente" />
+                        <div class="help">Se precisar: Apto 12, Bloco B, perto da escola</div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="residents">Quantas pessoas moram na residência</label>
+                        </div>
+                        <input id="residents" name="residents" type="number" min="1" max="99" inputmode="numeric" placeholder="Ex.: 3" data-label="Quantas pessoas moram na residência" />
+                        <div class="help">SOMENTE NÚMEROS.</div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="houseType">Tipo de moradia</label>
+                        </div>
+                        <select id="houseType" name="houseType" data-label="Tipo de moradia">
+                          <option value="">Selecione...</option>
+                          <option value="casa-propria">Casa Própria</option>
+                          <option value="casa-alugada">Casa Alugada</option>
+                          <option value="ap-proprio">Apartamento Próprio</option>
+                          <option value="ap-alugado">Apartamento Alugado</option>
+                        </select>
+                        <div class="help">Escolha uma opção. Se for aluguel, informe o valor abaixo.</div>
+
+                        <div id="rent-value-field" class="conditional-field">
+                          <div class="label-row">
+                            <label for="rentValue">Valor do aluguel (R$)</label>
+                          </div>
+                          <input id="rentValue" name="rentValue" type="text" inputmode="decimal" placeholder="Ex.: R$ 1.500,00" data-label="Valor do aluguel" />
+                          <div class="help">Digite somente números. Ex.: 1500 vira R$ 1.500,00.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="actions">
+                      <button type="submit" class="btn-primary">Próximo</button>
+                    </div>
+                  </form>
+                </div>
+
+                <div id="section2" class="section">
+                  <h1>Dados Profissionais</h1>
+                  <p class="sub">Informações sobre trabalho e família</p>
+                  <form id="form2">
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label>Recebe benefício?</label>
+                        </div>
+                        <div class="radio-group">
+                          <div class="radio-option">
+                            <input type="radio" id="benefit-yes" name="benefit" value="sim" data-label="Recebe benefício" />
+                            <label for="benefit-yes" class="radio-label">Sim</label>
+                          </div>
+                          <div class="radio-option">
+                            <input type="radio" id="benefit-no" name="benefit" value="nao" data-label="Recebe benefício" />
+                            <label for="benefit-no" class="radio-label">Não</label>
+                          </div>
+                        </div>
+                        <div class="help">Selecione uma opção.</div>
+
+                        <div id="benefit-value-field" class="conditional-field">
+                          <div class="label-row">
+                            <label for="benefitValue">Valor do benefício</label>
+                          </div>
+                          <input id="benefitValue" name="benefitValue" type="text" inputmode="decimal" placeholder="Ex.: R$ 1.500,00" data-label="Valor do benefício" />
+                          <div class="help">Digite o valor. Ex.: 1500 vira R$ 1.500,00.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label>Trabalha registrado?</label>
+                        </div>
+                        <div class="radio-group">
+                          <div class="radio-option">
+                            <input type="radio" id="works-yes" name="works" value="sim" data-label="Trabalha registrado" />
+                            <label for="works-yes" class="radio-label">Sim</label>
+                          </div>
+                          <div class="radio-option">
+                            <input type="radio" id="works-no" name="works" value="nao" data-label="Trabalha registrado" />
+                            <label for="works-no" class="radio-label">Não</label>
+                          </div>
+                        </div>
+                        <div class="help">Selecione uma opção.</div>
+                      </div>
+                    </div>
+
+                    <div id="works-fields" class="conditional-section">
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="companyName">Nome da empresa</label>
+                          </div>
+                          <input id="companyName" name="companyName" type="text" placeholder="Ex.: Empresa XYZ Ltda" data-label="Nome da empresa" />
+                          <div class="help">Nome completo da empresa.</div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="workTime">Quanto tempo de registro</label>
+                          </div>
+                          <input id="workTime" name="workTime" type="text" placeholder="Ex.: 2 anos" data-label="Quanto tempo de registro" />
+                          <div class="help">Ex.: 2 anos, 6 meses.</div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="workCep">CEP do trabalho</label>
+                          </div>
+                          <input id="workCep" name="workCep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9" data-label="CEP do trabalho" />
+                          <div class="help">Digite o CEP para buscar o endereço automaticamente</div>
+                        </div>
+                      </div>
+
+                      <div class="address-fields row row-2" id="address-fields-trabalho">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="workStreet">Rua do trabalho</label>
+                          </div>
+                          <input id="workStreet" name="workStreet" type="text" placeholder="Ex.: Rua A" data-label="Rua do trabalho" readonly />
+                          <div class="help">Preenchido automaticamente</div>
+                        </div>
+                        <div class="field">
+                          <div class="label-row">
+                          <label for="workNumber">Nº do local de trabalho</label>
+                          </div>
+                          <input id="workNumber" name="workNumber" type="text" placeholder="Ex.: 123" data-label="Nº do local de trabalho" />
+                          <div class="help">Número do endereço da empresa (não é telefone).</div>
+                        </div>
+                      </div>
+
+                      <div class="address-fields row row-2" id="address-fields-trabalho-2">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="workDistrict">Bairro do trabalho</label>
+                          </div>
+                          <input id="workDistrict" name="workDistrict" type="text" placeholder="Ex.: Centro" data-label="Bairro do trabalho" readonly />
+                          <div class="help">Preenchido automaticamente</div>
+                        </div>
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="workCity">Cidade do trabalho</label>
+                          </div>
+                          <input id="workCity" name="workCity" type="text" placeholder="Ex.: São Paulo" data-label="Cidade do trabalho" readonly />
+                          <div class="help">Preenchido automaticamente</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="profession">Profissão</label>
+                        </div>
+                        <input id="profession" name="profession" type="text" placeholder="Ex.: Professor" data-label="Profissão" />
+                        <div class="help">Ex.: Vendedor, Motorista.</div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="income">Renda mensal</label>
+                        </div>
+                        <input id="income" name="income" type="text" inputmode="decimal" placeholder="Ex.: R$ 3.000,00" data-label="Renda mensal" />
+                        <div class="help">Digite o valor. Ex.: 3000 vira R$ 3.000,00.</div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label>Casado(a)?</label>
+                        </div>
+                        <div class="radio-group">
+                          <div class="radio-option">
+                            <input type="radio" id="married-yes" name="married" value="sim" data-label="Casado(a)" />
+                            <label for="married-yes" class="radio-label">Sim</label>
+                          </div>
+                          <div class="radio-option">
+                            <input type="radio" id="married-no" name="married" value="nao" data-label="Casado(a)" />
+                            <label for="married-no" class="radio-label">Não</label>
+                          </div>
+                        </div>
+                        <div class="help">Selecione uma opção.</div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="field">
+                        <div class="label-row">
+                          <label>Tem filhos?</label>
+                        </div>
+                        <div class="radio-group">
+                          <div class="radio-option">
+                            <input type="radio" id="children-yes" name="children" value="sim" data-label="Tem filhos" />
+                            <label for="children-yes" class="radio-label">Sim</label>
+                          </div>
+                          <div class="radio-option">
+                            <input type="radio" id="children-no" name="children" value="nao" data-label="Tem filhos" />
+                            <label for="children-no" class="radio-label">Não</label>
+                          </div>
+                        </div>
+                        <div class="help">Selecione uma opção.</div>
+                      </div>
+                    </div>
+
+                    <div id="children-fields" class="conditional-section">
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="childrenAge">Idade dos filhos</label>
+                          </div>
+                          <input id="childrenAge" name="childrenAge" type="text" placeholder="Ex.: 10, 15, 20" data-label="Idade dos filhos" />
+                          <div class="help">Separe por vírgula. Ex.: 10, 15.</div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="childrenWorks">Algum filho trabalha registrado?</label>
+                          </div>
+                          <input id="childrenWorks" name="childrenWorks" type="text" placeholder="Ex.: Sim, o mais velho" data-label="Algum filho trabalha registrado" />
+                          <div class="help">Descreva se algum filho trabalha.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="spouse-section" class="conditional-section">
+                      <h2 class="section-title">Dados do Cônjuge</h2>
+
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label>Marido/esposa trabalha registrado?</label>
+                          </div>
+                          <div class="radio-group">
+                            <div class="radio-option">
+                              <input type="radio" id="spouse-works-yes" name="spouseWorks" value="sim" data-label="Marido/esposa trabalha registrado" />
+                              <label for="spouse-works-yes" class="radio-label">Sim</label>
+                            </div>
+                            <div class="radio-option">
+                              <input type="radio" id="spouse-works-no" name="spouseWorks" value="nao" data-label="Marido/esposa trabalha registrado" />
+                              <label for="spouse-works-no" class="radio-label">Não</label>
+                            </div>
+                          </div>
+                          <div class="help">Selecione uma opção.</div>
+                        </div>
+                      </div>
+
+                      <div id="spouse-works-fields" class="conditional-section">
+                        <div class="row">
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="spouseCompanyName">Nome da empresa do cônjuge</label>
+                            </div>
+                            <input id="spouseCompanyName" name="spouseCompanyName" type="text" placeholder="Ex.: Empresa ABC Ltda" data-label="Nome da empresa do cônjuge" />
+                            <div class="help">Nome completo da empresa.</div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="spouseWorkTime">Tempo de registro do cônjuge</label>
+                            </div>
+                            <input id="spouseWorkTime" name="spouseWorkTime" type="text" placeholder="Ex.: 3 anos" data-label="Tempo de registro do cônjuge" />
+                            <div class="help">Ex.: 1 ano, 6 meses.</div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="spouseWorkCep">CEP do trabalho do cônjuge</label>
+                            </div>
+                            <input id="spouseWorkCep" name="spouseWorkCep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9" data-label="CEP do trabalho do cônjuge" />
+                            <div class="help">Digite o CEP para buscar o endereço automaticamente</div>
+                          </div>
+                        </div>
+
+                        <div class="address-fields row row-2" id="address-fields-trabalho-conjuge">
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="spouseWorkStreet">Rua do trabalho do cônjuge</label>
+                            </div>
+                            <input id="spouseWorkStreet" name="spouseWorkStreet" type="text" placeholder="Ex.: Rua B" data-label="Rua do trabalho do cônjuge" readonly />
+                            <div class="help">Preenchido automaticamente</div>
+                          </div>
+                          <div class="field">
+                            <div class="label-row">
+                          <label for="spouseWorkNumber">Nº do local de trabalho (cônjuge)</label>
+                            </div>
+                          <input id="spouseWorkNumber" name="spouseWorkNumber" type="text" placeholder="Ex.: 456" data-label="Nº do local de trabalho (cônjuge)" />
+                          <div class="help">Número do endereço da empresa (não é telefone).</div>
+                          </div>
+                        </div>
+
+                        <div class="address-fields row row-2" id="address-fields-trabalho-conjuge-2">
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="spouseWorkDistrict">Bairro do trabalho do cônjuge</label>
+                            </div>
+                            <input id="spouseWorkDistrict" name="spouseWorkDistrict" type="text" placeholder="Ex.: Centro" data-label="Bairro do trabalho do cônjuge" readonly />
+                            <div class="help">Preenchido automaticamente</div>
+                          </div>
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="spouseWorkCity">Cidade do trabalho do cônjuge</label>
+                            </div>
+                            <input id="spouseWorkCity" name="spouseWorkCity" type="text" placeholder="Ex.: São Paulo" data-label="Cidade do trabalho do cônjuge" readonly />
+                            <div class="help">Preenchido automaticamente</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div id="spouse-no-works-field" class="conditional-section">
+                        <div class="row">
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="spouseSideJob">Faz bico?</label>
+                            </div>
+                            <input id="spouseSideJob" name="spouseSideJob" type="text" placeholder="Ex.: Vende doces" data-label="Faz bico" />
+                            <div class="help">Descreva se faz algum bico.</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="spouseProfession">Profissão do cônjuge</label>
+                          </div>
+                          <input id="spouseProfession" name="spouseProfession" type="text" placeholder="Ex.: Enfermeiro" data-label="Profissão do cônjuge" />
+                          <div class="help">Profissão do marido/esposa.</div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="field">
+                          <div class="label-row">
+                            <label for="spouseIncome">Renda mensal do cônjuge</label>
+                          </div>
+                          <input id="spouseIncome" name="spouseIncome" type="text" inputmode="decimal" placeholder="Ex.: R$ 2.500,00" data-label="Renda mensal do cônjuge" />
+                          <div class="help">Digite o valor. Ex.: 2500 vira R$ 2.500,00.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="actions">
+                      <button type="submit" class="btn-primary">Próximo</button>
+                    </div>
+                  </form>
+                </div>
+
+                <div id="section3" class="section">
+                  <h1>Documentos e Fotos</h1>
+                  <p class="sub">Envie fotos e documentos</p>
+                  <form id="form3">
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="fotoCasa">Foto da casa</label>
+                        <button type="button" class="upload-plus" data-for="fotoCasa" aria-label="Adicionar">+</button>
+                        <span class="count-badge" id="count-fotoCasa">0</span>
+                      </div>
+                      <input type="file" id="fotoCasa" name="fotoCasa" class="file-input" accept="image/*,video/*" multiple data-label="Foto da casa" />
+                      <div class="help">Tire várias fotos da casa.</div>
+                      <div class="files-preview" id="preview-fotoCasa"></div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="fotoCliente">Foto do cliente (segurando o RG)</label>
+                        <button type="button" class="upload-plus" data-for="fotoCliente" aria-label="Adicionar">Adicionar mídia</button>
+                        <span class="count-badge" id="count-fotoCliente">0</span>
+                      </div>
+                      <input type="file" id="fotoCliente" name="fotoCliente" class="file-input" accept="image/*" multiple data-label="Foto do cliente segurando o RG" />
+                      <div class="help">Cliente deve segurar o RG ao lado do rosto.</div>
+                      <div class="files-preview" id="preview-fotoCliente"></div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="comprovanteResidencia">Comprovante de residência/IPTU</label>
+                        <button type="button" class="upload-plus" data-for="comprovanteResidencia" aria-label="Adicionar">Adicionar mídia</button>
+                        <span class="count-badge" id="count-comprovanteResidencia">0</span>
+                      </div>
+                      <input type="file" id="comprovanteResidencia" name="comprovanteResidencia" class="file-input" accept="image/*,application/pdf" multiple data-label="Comprovante de residência/IPTU" />
+                      <div class="help">Conta de luz, água, gás ou IPTU.</div>
+                      <div class="files-preview" id="preview-comprovanteResidencia"></div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="carteiraTrabalho">Carteira de trabalho</label>
+                        <button type="button" class="upload-plus" data-for="carteiraTrabalho" aria-label="Adicionar">Adicionar mídia</button>
+                        <span class="count-badge" id="count-carteiraTrabalho">0</span>
+                      </div>
+                      <input type="file" id="carteiraTrabalho" name="carteiraTrabalho" class="file-input" accept="image/*,application/pdf" multiple data-label="Carteira de trabalho" />
+                      <div class="help">Todas as páginas importantes.</div>
+                      <div class="files-preview" id="preview-carteiraTrabalho"></div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="holerite">Holerite</label>
+                        <button type="button" class="upload-plus" data-for="holerite" aria-label="Adicionar">Adicionar mídia</button>
+                        <span class="count-badge" id="count-holerite">0</span>
+                      </div>
+                      <input type="file" id="holerite" name="holerite" class="file-input" accept="image/*,application/pdf" multiple data-label="Holerite" />
+                      <div class="help">Últimos holerites.</div>
+                      <div class="files-preview" id="preview-holerite"></div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="extratoBeneficio">Extrato do benefício</label>
+                        <button type="button" class="upload-plus" data-for="extratoBeneficio" aria-label="Adicionar">Adicionar mídia</button>
+                        <span class="count-badge" id="count-extratoBeneficio">0</span>
+                      </div>
+                      <input type="file" id="extratoBeneficio" name="extratoBeneficio" class="file-input" accept="image/*,application/pdf" multiple data-label="Extrato do benefício" />
+                      <div class="help">Se recebe benefício, envie o extrato.</div>
+                      <div class="files-preview" id="preview-extratoBeneficio"></div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="rg">RG frente/verso</label>
+                        <button type="button" class="upload-plus" data-for="rg" aria-label="Adicionar">Adicionar mídia</button>
+                        <span class="count-badge" id="count-rg">0</span>
+                      </div>
+                      <input type="file" id="rg" name="rg" class="file-input" accept="image/*,application/pdf" multiple data-label="RG frente/verso" />
+                      <div class="help">Frente e verso do RG.</div>
+                      <div class="files-preview" id="preview-rg"></div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="redesSociais">Redes sociais</label>
+                        <button type="button" class="upload-plus" data-for="redesSociais" aria-label="Adicionar">Adicionar mídia</button>
+                        <span class="count-badge" id="count-redesSociais">0</span>
+                      </div>
+                      <input type="file" id="redesSociais" name="redesSociais" class="file-input" accept="image/*,video/*,application/pdf" multiple data-label="Redes sociais" />
+                      <div class="help">Print das redes sociais do cliente.</div>
+                      <div class="files-preview" id="preview-redesSociais"></div>
+                    </div>
+
+                    <div class="actions">
+                      <button type="submit" class="btn-primary">Próximo</button>
+                    </div>
+                  </form>
+                </div>
+
+                <div id="section4" class="section">
+                  <h1>Confirmação de Endereço</h1>
+                  <p class="sub">Adicione as confirmações de endereço dos parentes</p>
+                  <form id="form4">
+                    <div class="field">
+                      <div class="help" style="margin-bottom: 20px;">Clique no botão abaixo para adicionar confirmações de endereço com foto e GPS</div>
+
+                      <button type="button" id="btn-add-confirmation" class="btn-add-confirmation">[+] Adicionar Confirmação de Endereço</button>
+
+                      <div id="confirmations-container" class="confirmations-container"></div>
+                    </div>
+
+                    <div class="actions">
+                      <button type="submit" class="btn-primary">Finalizar</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="history-view" class="main-view">
+          <div class="view-wrapper">
+            <h2>Histórico de visitas</h2>
+            <p class="view-help">Selecione uma visita salva para continuar o preenchimento. Visitas enviadas não aparecem aqui.</p>
+            <div id="history-list" class="visit-list"></div>
+          </div>
+        </section>
+
+        <section id="send-view" class="main-view">
+          <div class="view-wrapper">
+            <h2>Enviar visitas</h2>
+            <p class="view-help">Envie as visitas salvas para o servidor central. Após o envio os dados serão removidos do seu aparelho.</p>
+            <div id="send-list" class="visit-list"></div>
+          </div>
+        </section>
+      </main>
+      <div class="footer-bar">
+        <div class="footer-bar__inner">
+          <button id="btn-save-draft" class="btn-save-draft" title="Salvar rascunho">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Salvar rascunho
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="validation-modal" class="modal">
+      <div class="modal-content">
+        <h2 class="modal-title" id="modal-title">Faltou preencher um campo</h2>
+        <p class="modal-text" id="modal-message">O campo <strong id="missing-field"></strong> não foi preenchido.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal btn-fill" id="btn-fill">Preencher agora</button>
+          <button type="button" class="btn-modal btn-skip" id="btn-skip">Continuar sem esse dado</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cep-modal" class="cep-modal">
+      <div class="cep-modal-content">
+        <h3>✅ Endereço Encontrado!</h3>
+        <p style="color: var(--muted); margin-bottom: 12px;">Confirme se os dados estão corretos:</p>
+        <p id="cep-modal-address"></p>
+        <div class="cep-modal-actions">
+          <button type="button" class="cep-modal-btn confirm" id="cep-confirm">✓ Confirmar e Preencher</button>
+          <button type="button" class="cep-modal-btn cancel" id="cep-cancel">✗ Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="permission-modal" class="overlay-modal" aria-hidden="true">
+      <div class="overlay-modal__content">
+        <h2>Permissões necessárias</h2>
+        <p>Este aplicativo precisa de acesso à localização e à câmera/arquivos para registrar a visita completa.</p>
+        <ul>
+          <li><strong>Localização:</strong> utilizada para comprovar o endereço visitado.</li>
+          <li><strong>Câmera/Arquivos:</strong> necessária para anexar fotos e documentos.</li>
+        </ul>
+        <p>Clique em "Permitir agora" para abrir a solicitação do navegador.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal btn-fill" id="permission-allow">Permitir agora</button>
+          <button type="button" class="btn-modal btn-skip" id="permission-close">Entendi</button>
+        </div>
+      </div>
+    </div>
+
+    <template id="confirmation-template">
+      <div class="confirmation-item">
+        <div class="confirmation-header">
+          <span class="confirmation-title"></span>
+          <button type="button" class="btn-remove-confirmation">[X] Remover</button>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label>Nome do parente</label>
+          </div>
+          <input type="text" class="conf-name" placeholder="Ex.: Maria Silva" autocomplete="off" autocorrect="on" autocapitalize="words" spellcheck="true" />
+          <div class="help">Nome completo do parente</div>
+        </div>
+
+        <div class="row row-2">
+          <div class="field">
+            <div class="label-row">
+              <label>WhatsApp do parente</label>
+            </div>
+            <input type="tel" class="conf-whatsapp" placeholder="(11) 90000-0000" maxlength="15" />
+            <div class="help">Ex.: 11912345678</div>
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label>Qual parente é</label>
+            </div>
+            <input type="text" class="conf-relation" placeholder="Ex.: Irmã" autocomplete="off" autocorrect="on" autocapitalize="words" spellcheck="true" />
+            <div class="help">Ex.: Mãe, Irmão, Tio</div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: 16px;">
+          <div class="label-row">
+            <label>CEP</label>
+          </div>
+          <input type="text" class="conf-cep" placeholder="00000-000" maxlength="9" inputmode="numeric" />
+          <div class="help">Digite o CEP para buscar automaticamente</div>
+        </div>
+
+        <div class="address-fields row row-2 conf-address-1" style="display: none;">
+          <div class="field">
+            <div class="label-row">
+              <label>Rua</label>
+            </div>
+            <input type="text" class="conf-street" placeholder="Ex.: Rua das Flores" readonly />
+            <div class="help">Preenchido automaticamente</div>
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label>Número</label>
+            </div>
+            <input type="text" class="conf-number" placeholder="Ex.: 123" />
+            <div class="help">Digite o número</div>
+          </div>
+        </div>
+
+        <div class="address-fields row row-2 conf-address-2" style="display: none;">
+          <div class="field">
+            <div class="label-row">
+              <label>Bairro</label>
+            </div>
+            <input type="text" class="conf-district" placeholder="Ex.: Centro" readonly />
+            <div class="help">Preenchido automaticamente</div>
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label>Cidade</label>
+            </div>
+            <input type="text" class="conf-city" placeholder="Ex.: São Paulo" readonly />
+            <div class="help">Preenchido automaticamente</div>
+          </div>
+        </div>
+
+        <div class="address-fields field conf-address-3" style="display: none; margin-top: 16px;">
+          <div class="label-row">
+            <label>Tipo de moradia</label>
+          </div>
+          <select class="conf-house-select">
+            <option value="">Selecione...</option>
+            <option value="casa-propria">Casa Própria</option>
+            <option value="casa-alugada">Casa Alugada</option>
+            <option value="ap-proprio">Apartamento Próprio</option>
+            <option value="ap-alugado">Apartamento Alugado</option>
+          </select>
+          <div class="help">Escolha uma opção</div>
+        </div>
+
+        <div class="field" style="margin-top: 16px;">
+          <div class="label-row">
+            <label>Foto(s) da casa</label>
+            <span class="count-badge conf-count">0</span>
+          </div>
+          <input type="file" class="conf-file-input file-input" accept="image/*,video/*" multiple />
+          <label class="upload-btn conf-upload-btn">Adicionar mídia</label>
+          <div class="help">Foto da placa ou número da casa</div>
+          <div class="files-preview conf-preview"></div>
+        </div>
+
+        <div class="field" style="margin-top: 16px;">
+          <button type="button" class="btn-capture-gps conf-gps-btn">[GPS] Capturar Localização</button>
+          <div class="gps-info conf-gps-info" style="display: none;"></div>
+        </div>
+      </div>
+    </template>
+
+            <script type="module" src="/js/app.js?v=10"></script>
+  </body>
+</html>
+

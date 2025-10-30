@@ -1,0 +1,29 @@
+{
+  "id": "761b6ff3-b128-4e9f-a8bd-052024f7cc77",
+  "status": "rascunho",
+  "createdAt": "2025-10-29T18:48:55.898Z",
+  "updatedAt": "2025-10-29T18:48:55.898Z",
+  "createdBy": null,
+  "sections": {
+    "section1": {},
+    "section2": {},
+    "section3": {},
+    "section4": {}
+  },
+  "files": {},
+  "history": [
+    {
+      "type": "create",
+      "at": "2025-10-29T18:48:55.898Z",
+      "by": null
+    }
+  ],
+  "webhook": {
+    "attempts": 0,
+    "lastStatus": null,
+    "lastAttemptAt": null
+  },
+  "metadata": {
+    "lastAutosaveAt": "2025-10-29T18:48:55.898Z"
+  }
+}

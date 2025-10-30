@@ -1,0 +1,123 @@
+{
+  "id": "82601dcc-1c7e-4faa-9358-578b9b696838",
+  "status": "rascunho",
+  "createdAt": "2025-10-30T04:19:14.397Z",
+  "updatedAt": "2025-10-30T04:34:07.332Z",
+  "createdBy": null,
+  "sections": {
+    "section1": {
+      "sender": "",
+      "clientName": "",
+      "age": "",
+      "cpf": "",
+      "whatsapp": "",
+      "cep": "",
+      "street": "",
+      "number": "",
+      "district": "",
+      "city": "",
+      "complement": "",
+      "residents": "",
+      "houseType": "",
+      "rentValue": ""
+    },
+    "section2": {
+      "benefitValue": "",
+      "works": "nao",
+      "companyName": "",
+      "workTime": "",
+      "workCep": "",
+      "workStreet": "",
+      "workNumber": "",
+      "workDistrict": "",
+      "workCity": "",
+      "profession": "",
+      "income": "",
+      "children": "sim",
+      "childrenAge": "",
+      "childrenWorks": "",
+      "spouseCompanyName": "",
+      "spouseWorkTime": "",
+      "spouseWorkCep": "",
+      "spouseWorkStreet": "",
+      "spouseWorkNumber": "",
+      "spouseWorkDistrict": "",
+      "spouseWorkCity": "",
+      "spouseSideJob": "",
+      "spouseProfession": "",
+      "spouseIncome": ""
+    },
+    "section3": {},
+    "section4": {
+      "confirmations": [
+        {
+          "nome": "",
+          "whatsapp": "",
+          "qualParente": "",
+          "cep": "",
+          "numero": "",
+          "rua": "",
+          "bairro": "",
+          "cidade": "",
+          "tipoCasa": "",
+          "filesField": "confirmation-6da57dc6-b89c-44ad-9c64-e1c6b6046218",
+          "gps": null
+        }
+      ]
+    }
+  },
+  "files": {},
+  "history": [
+    {
+      "type": "create",
+      "at": "2025-10-30T04:19:14.397Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-30T04:22:10.546Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-30T04:24:09.248Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-30T04:26:50.979Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-30T04:28:05.383Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-30T04:28:40.327Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-30T04:33:26.983Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-30T04:34:07.332Z",
+      "by": null
+    }
+  ],
+  "webhook": {
+    "attempts": 0,
+    "lastStatus": null,
+    "lastAttemptAt": null
+  },
+  "metadata": {
+    "lastAutosaveAt": "2025-10-30T04:34:07.332Z",
+    "step": "section3",
+    "lastStepAt": "2025-10-30T04:33:25.110Z",
+    "autosaveAt": "2025-10-30T04:34:05.521Z"
+  }
+}

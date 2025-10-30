@@ -1,0 +1,269 @@
+{
+  "id": "158d8055-bba6-4e14-bd91-be886f0857b8",
+  "status": "rascunho",
+  "createdAt": "2025-10-29T22:10:08.601Z",
+  "updatedAt": "2025-10-29T22:23:55.187Z",
+  "createdBy": null,
+  "sections": {
+    "section1": {
+      "localizacaoVisita": {
+        "latitude": -23.2993899,
+        "longitude": -45.9299307,
+        "precisao": 16.48699951171875,
+        "timestamp": "2025-10-29T22:23:53.772Z",
+        "linkMaps": "https://maps.google.com/?q=-23.2993899,-45.9299307"
+      }
+    },
+    "section2": {
+      "benefit": "nao",
+      "benefitValue": "",
+      "works": "sim",
+      "companyName": "Srn tercerizada",
+      "workTime": "1 ano e 9 meses ",
+      "workCep": "",
+      "workStreet": "",
+      "workNumber": "",
+      "workDistrict": "",
+      "workCity": "",
+      "profession": "Auxiliar de logística ",
+      "income": "R$ 1.000,00",
+      "married": "sim",
+      "children": "sim",
+      "childrenAge": "09/06/05 meses",
+      "childrenWorks": "Não ",
+      "spouseWorks": "sim",
+      "spouseCompanyName": "Atacadao ",
+      "spouseWorkTime": "5 anos",
+      "spouseWorkCep": "12335010",
+      "spouseWorkStreet": "Rodovia Presidente Dutra",
+      "spouseWorkNumber": "S/N",
+      "spouseWorkDistrict": "Parque Meia Lua",
+      "spouseWorkCity": "Jacareí/SP",
+      "spouseSideJob": "",
+      "spouseProfession": "Auxiliar de Produção ",
+      "spouseIncome": "R$ 2.500,00"
+    },
+    "section3": {},
+    "section4": {
+      "confirmations": [
+        {
+          "nome": "Roni",
+          "whatsapp": "",
+          "qualParente": "Tio",
+          "cep": "12312-340",
+          "numero": "120",
+          "rua": "Rua Joana D'Arc",
+          "bairro": "Cidade Salvador",
+          "cidade": "Jacareí/SP",
+          "tipoCasa": "casa-propria",
+          "filesField": "confirmation-e8053adc-5fde-4765-af30-061bdf71cfb0",
+          "gps": null
+        }
+      ]
+    }
+  },
+  "files": {
+    "fotoCasa": [
+      {
+        "id": "a587e686-abd8-4618-89ff-7deab618d718",
+        "filename": "4c4874d1-2d9f-4d54-b9c7-6c8adf45c32f.jpg",
+        "originalName": "17617762574327918221154646657900.jpg",
+        "mimeType": "image/jpeg",
+        "size": 2546265,
+        "uploadedAt": "2025-10-29T22:17:54.442Z"
+      }
+    ],
+    "fotoCliente": [
+      {
+        "id": "270bd340-905b-4f1c-9b2b-03168a3dfa7e",
+        "filename": "65dc8b83-b7e0-406b-af25-0003e713afcb.jpg",
+        "originalName": "17617762813177762615312962006232.jpg",
+        "mimeType": "image/jpeg",
+        "size": 2628039,
+        "uploadedAt": "2025-10-29T22:18:16.996Z"
+      }
+    ],
+    "comprovanteResidencia": [
+      {
+        "id": "480af01d-9797-443f-aac2-f5f439b881b6",
+        "filename": "35b793a6-083d-4379-8821-197894e07c14.jpg",
+        "originalName": "17617763013438835548831956680810.jpg",
+        "mimeType": "image/jpeg",
+        "size": 4583973,
+        "uploadedAt": "2025-10-29T22:18:58.844Z"
+      }
+    ],
+    "rg": [
+      {
+        "id": "99f249e6-0cc5-4798-8cbd-d188344cdccb",
+        "filename": "46297607-8f22-4eb9-9d80-755b74acb19c.jpg",
+        "originalName": "17617763941218198541819045103412.jpg",
+        "mimeType": "image/jpeg",
+        "size": 3097149,
+        "uploadedAt": "2025-10-29T22:20:31.642Z"
+      },
+      {
+        "id": "12ecc311-4ed1-4254-9c75-12a9819cfa28",
+        "filename": "dd0df1cd-46b7-4a92-b466-edf9b3cb3c1f.jpg",
+        "originalName": "17617764190251058061477604270093.jpg",
+        "mimeType": "image/jpeg",
+        "size": 3418200,
+        "uploadedAt": "2025-10-29T22:20:35.472Z"
+      }
+    ],
+    "redesSociais": [
+      {
+        "id": "d9de91d4-1d75-47b9-a6ac-8310ae9f169b",
+        "filename": "82277cc0-cc97-4414-886d-f4bd74d62fd1.jpg",
+        "originalName": "176177645085233566122864606981.jpg",
+        "mimeType": "image/jpeg",
+        "size": 4213694,
+        "uploadedAt": "2025-10-29T22:21:05.891Z"
+      }
+    ]
+  },
+  "history": [
+    {
+      "type": "create",
+      "at": "2025-10-29T22:10:08.601Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:10:09.299Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:10:11.686Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:10:11.834Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:10:17.741Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:11:55.990Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:12:03.190Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:12:06.112Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:14:19.236Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:14:54.917Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:15:32.838Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:17:36.426Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:17:36.488Z",
+      "by": null
+    },
+    {
+      "type": "file-add",
+      "field": "fotoCasa",
+      "fileId": "a587e686-abd8-4618-89ff-7deab618d718",
+      "at": "2025-10-29T22:17:54.442Z"
+    },
+    {
+      "type": "file-add",
+      "field": "fotoCliente",
+      "fileId": "270bd340-905b-4f1c-9b2b-03168a3dfa7e",
+      "at": "2025-10-29T22:18:16.996Z"
+    },
+    {
+      "type": "file-add",
+      "field": "comprovanteResidencia",
+      "fileId": "480af01d-9797-443f-aac2-f5f439b881b6",
+      "at": "2025-10-29T22:18:58.844Z"
+    },
+    {
+      "type": "file-add",
+      "field": "rg",
+      "fileId": "99f249e6-0cc5-4798-8cbd-d188344cdccb",
+      "at": "2025-10-29T22:20:31.642Z"
+    },
+    {
+      "type": "file-add",
+      "field": "rg",
+      "fileId": "12ecc311-4ed1-4254-9c75-12a9819cfa28",
+      "at": "2025-10-29T22:20:35.472Z"
+    },
+    {
+      "type": "file-add",
+      "field": "redesSociais",
+      "fileId": "d9de91d4-1d75-47b9-a6ac-8310ae9f169b",
+      "at": "2025-10-29T22:21:05.891Z"
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:21:12.402Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:21:15.781Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:23:20.328Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:23:20.598Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:23:20.759Z",
+      "by": null
+    },
+    {
+      "type": "autosave",
+      "at": "2025-10-29T22:23:55.185Z",
+      "by": null
+    }
+  ],
+  "webhook": {
+    "attempts": 0,
+    "lastStatus": null,
+    "lastAttemptAt": null
+  },
+  "metadata": {
+    "lastAutosaveAt": "2025-10-29T22:23:55.187Z",
+    "step": "draft",
+    "lastStepAt": "2025-10-29T22:23:16.206Z",
+    "autosaveAt": "2025-10-29T22:23:08.727Z"
+  }
+}
